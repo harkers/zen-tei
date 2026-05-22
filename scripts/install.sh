@@ -23,16 +23,28 @@ rustc --version
 cargo --version
 
 echo
-echo "── 2/5 Clone + build TEI ──"
+echo "── 2/5 Clone + build TEI at pinned SHA ──"
+# shellcheck disable=SC1091
+source "$REPO_DIR/VERSIONS"
 mkdir -p "$(dirname "$SRC_DIR")" "$BIN_DIR"
 if [ ! -d "$SRC_DIR" ]; then
-    git clone --depth=1 \
-        https://github.com/huggingface/text-embeddings-inference.git \
-        "$SRC_DIR"
+    # Full clone (not --depth=1) so we can check out arbitrary SHAs later.
+    git clone https://github.com/huggingface/text-embeddings-inference.git "$SRC_DIR"
 fi
-(cd "$SRC_DIR" && cargo install --path router --features metal)
+(
+    cd "$SRC_DIR"
+    if [ "$(git rev-parse HEAD)" != "$TEI_SOURCE_SHA" ]; then
+        git fetch origin
+        git checkout "$TEI_SOURCE_SHA"
+    fi
+    cargo install --path router --features metal
+)
 ln -sf "$HOME/.cargo/bin/text-embeddings-router" "$BIN_DIR/text-embeddings-router"
-"$BIN_DIR/text-embeddings-router" --version
+INSTALLED_VERSION=$("$BIN_DIR/text-embeddings-router" --version | awk '{print $2}')
+if [ "$INSTALLED_VERSION" != "$TEI_ROUTER_VERSION" ]; then
+    echo "  WARN: built router $INSTALLED_VERSION but VERSIONS says $TEI_ROUTER_VERSION" >&2
+fi
+echo "  built: text-embeddings-router $INSTALLED_VERSION"
 
 echo
 echo "── 3/5 Pull HF models into shared cache ──"
