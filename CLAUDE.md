@@ -11,6 +11,26 @@ with `--features metal` so reranks/embeds get Apple Silicon Metal acceleration.
 Companion design + plan in [`docs/`](docs/). Parent project at
 [`harkers/macbookm5promax`](https://github.com/harkers/macbookm5promax).
 
+## Pinned versions (`VERSIONS`)
+
+The `VERSIONS` file at the repo root is shell-sourceable and the single
+source of truth for: TEI source SHA, Rust toolchain, HuggingFace model
+revisions, and a last-smoke marker. `scripts/install.sh` sources it
+during the TEI clone + build step (T2/T3 of the Phase A plan).
+
+Bump procedure:
+
+1. Edit `VERSIONS` with the new pin(s).
+2. Run `./scripts/install.sh` — it will check out the new SHA, rebuild,
+   re-pull models, re-bootstrap.
+3. Run `./scripts/verify.sh` — must pass 9/9.
+4. Update `LAST_SMOKE_DATE` and `LAST_SMOKE_RESULT` in `VERSIONS`.
+5. Commit `VERSIONS` (and any other changed files) together.
+
+If `./scripts/verify.sh` fails after a bump, revert the `VERSIONS` edit
+and re-run install.sh — you're back to the previous pinned state in
+one minute.
+
 ## What runs
 
 | Component | Detail |
@@ -70,6 +90,25 @@ launchctl kickstart "gui/$(id -u)/com.tei.embed"
 ```
 
 Not a fix target; tracked here so the next operator doesn't re-diagnose.
+
+### Watchdog (com.tei.watchdog)
+
+The macOS Tahoe throttle is papered over by `scripts/watchdog.sh`,
+invoked every 90 s by `plist/com.tei.watchdog.plist`. The watchdog
+curls each `/health` endpoint and `launchctl kickstart`s any service
+that doesn't respond. Each recovery is logged with an ISO timestamp to
+`~/llm/logs/tei-watchdog.log`.
+
+Inspect recent recoveries:
+
+```bash
+tail -20 ~/llm/logs/tei-watchdog.log
+```
+
+Tune the interval by editing `plist/com.tei.watchdog.plist`'s
+`StartInterval` (90 → larger for less launchd noise, smaller for
+faster recovery). 60 s is the floor before launchd starts complaining;
+30 s is the absolute minimum allowed by launchd.
 
 ## Verify
 

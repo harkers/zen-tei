@@ -41,6 +41,19 @@ cd ~/projects/zen-tei
 ./scripts/verify.sh         # smoke both endpoints + tailnet reach
 ```
 
+`VERSIONS` (at the repo root) is the single source of truth for the
+TEI source SHA, Rust toolchain, and HuggingFace model revisions the
+install will produce. Bump = edit VERSIONS + re-run install.sh +
+re-run verify.sh + commit.
+
+Before committing changes that touch `scripts/` or `plist/`, run:
+
+```bash
+./scripts/lint.sh
+```
+
+(shellcheck + plutil; pre-commit-friendly.)
+
 See [`CLAUDE.md`](CLAUDE.md) for the full operator context (architecture,
 configuration, troubleshooting) and [`docs/`](docs/) for the design + plan.
 
