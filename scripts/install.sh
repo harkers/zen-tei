@@ -17,7 +17,7 @@ if ! command -v rustup >/dev/null 2>&1; then
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- \
         -y --default-toolchain stable --profile default
 fi
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC1091  # runtime path; cargo always creates this file
 source "$HOME/.cargo/env"
 rustc --version
 cargo --version
