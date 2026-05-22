@@ -1,0 +1,21 @@
+# zen-tei pinned versions — bump intentionally, smoke before commit.
+#
+# scripts/install.sh sources this file. Humans treat it as the contract
+# for "what does a clean install produce?" Bump = edit + commit + run
+# scripts/install.sh + run scripts/verify.sh + update LAST_SMOKE_*.
+
+# TEI source we build from. SHA, not branch — TEI doesn't ship release tags.
+TEI_SOURCE_SHA=5bc4d889c38cf9c75e63617d62779bc0f6628b23
+TEI_ROUTER_VERSION=1.9.3   # text-embeddings-router --version output
+
+# Rust toolchain — also pinned in rust-toolchain.toml so `cargo install` honors it.
+RUST_TOOLCHAIN=1.95.0
+
+# HuggingFace model snapshot SHAs — passed to hf-cli --revision so re-installs
+# get the exact weights we smoked against.
+BGE_RERANKER_LARGE_REV=55611d7bca2a7133960a6d3b71e083071bbfc312
+BGE_M3_REV=5617a9f61b028005a4858fdac845db406aefb181
+
+# Last verified-good state.
+LAST_SMOKE_DATE=2026-05-22
+LAST_SMOKE_RESULT="9/9 verify checks"

@@ -1,0 +1,5 @@
+# rustup honors this when a cargo command runs in any subdir of the repo.
+# Bump together with RUST_TOOLCHAIN in VERSIONS.
+[toolchain]
+channel = "1.95.0"
+profile = "default"
