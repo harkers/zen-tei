@@ -18,4 +18,4 @@ BGE_M3_REV=5617a9f61b028005a4858fdac845db406aefb181
 
 # Last verified-good state.
 LAST_SMOKE_DATE=2026-05-22
-LAST_SMOKE_RESULT="9/9 verify checks"
+LAST_SMOKE_RESULT="9/9 verify checks + 4/4 acceptance"
