@@ -93,11 +93,11 @@ Not a fix target; tracked here so the next operator doesn't re-diagnose.
 
 ### Watchdog (com.tei.watchdog)
 
-The macOS Tahoe throttle is papered over by `scripts/watchdog.sh`,
-invoked every 90 s by `plist/com.tei.watchdog.plist`. The watchdog
-curls each `/health` endpoint and `launchctl kickstart`s any service
-that doesn't respond. Each recovery is logged with an ISO timestamp to
-`~/llm/logs/tei-watchdog.log`.
+The macOS Tahoe throttle is papered over by `scripts/watchdog.sh`, a
+long-lived loop launched by `plist/com.tei.watchdog.plist` (KeepAlive,
+RunAtLoad). Every 90 s it curls each `/health` endpoint and
+`launchctl kickstart`s any service that doesn't respond. Each recovery
+is logged with an ISO timestamp to `~/llm/logs/tei-watchdog.log`.
 
 Inspect recent recoveries:
 
@@ -105,10 +105,16 @@ Inspect recent recoveries:
 tail -20 ~/llm/logs/tei-watchdog.log
 ```
 
-Tune the interval by editing `plist/com.tei.watchdog.plist`'s
-`StartInterval` (90 → larger for less launchd noise, smaller for
-faster recovery). 60 s is the floor before launchd starts complaining;
-30 s is the absolute minimum allowed by launchd.
+Why a long-lived loop instead of `StartInterval`: launchd's 10-second
+minimum-runtime backoff stalls `StartInterval` jobs that exit fast on
+the happy path. Keeping the process alive with an internal `sleep`
+sidesteps the throttle entirely — and the same `KeepAlive` mechanism
+respawns the watchdog if it ever crashes.
+
+Tune the interval by editing the `INTERVAL=90` constant at the top of
+`scripts/watchdog.sh` (larger for less launchctl noise, smaller for
+faster recovery). `launchctl kickstart com.tei.watchdog` after the
+edit to pick up the new value.
 
 ## Verify
 
