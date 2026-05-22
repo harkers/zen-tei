@@ -58,8 +58,8 @@ if [ -z "$HF_CLI" ]; then
     echo "  install via uv or pip, then re-run this step." >&2
     exit 1
 fi
-"$HF_CLI" download BAAI/bge-reranker-large
-"$HF_CLI" download BAAI/bge-m3
+"$HF_CLI" download BAAI/bge-reranker-large --revision "$BGE_RERANKER_LARGE_REV"
+"$HF_CLI" download BAAI/bge-m3            --revision "$BGE_M3_REV"
 
 echo
 echo "── 4/5 Install LaunchAgents ──"
