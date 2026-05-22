@@ -2,13 +2,13 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Land Phase A of the backlog at [`docs/backlog-design.md`](backlog-design.md) — pinned TEI source + Rust toolchain, pinned HF model revisions, a local lint script, and a watchdog LaunchAgent that auto-recovers from the macOS Tahoe respawn-throttle wrinkle. Phase B + C are out of scope.
+**Goal:** Land Phase A of the backlog at [`docs/backlog-design-v1.md`](backlog-design-v1.md) — pinned TEI source + Rust toolchain, pinned HF model revisions, a local lint script, and a watchdog LaunchAgent that auto-recovers from the macOS Tahoe respawn-throttle wrinkle. Phase B + C are out of scope.
 
 **Architecture:** Additive only. Existing `plist/com.tei.{rerank,embed}.plist` are unchanged. `scripts/install.sh` becomes pin-aware (sources a new shell-format `VERSIONS` file). New `scripts/lint.sh`, `scripts/watchdog.sh`, and `plist/com.tei.watchdog.plist`. New `rust-toolchain.toml`.
 
 **Tech Stack:** Bash, plutil, shellcheck, macOS LaunchAgents, Hugging Face hf-hub CLI, Cargo + rustup.
 
-**Companion spec:** [`docs/backlog-design.md`](backlog-design.md).
+**Companion spec:** [`docs/backlog-design-v1.md`](backlog-design-v1.md).
 
 **Acceptance criteria (from the spec):**
 

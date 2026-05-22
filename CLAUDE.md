@@ -202,6 +202,6 @@ zen-tei/
 └── docs/
     ├── design.md         # the original design spec (2026-05-21)
     ├── plan.md           # the 14-task implementation plan that produced this
-    ├── backlog-design.md # Phase A/B/C improvements design (2026-05-22)
+    ├── backlog-design-v1.md # Phase A/B/C improvements design (2026-05-22; current is highest -vN.md)
     └── phase-a-plan.md   # Phase A executed plan (2026-05-22)
 ```

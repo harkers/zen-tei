@@ -1,7 +1,18 @@
-# zen-tei improvements backlog — design
+# zen-tei improvements backlog — design (v1)
 
 **Status:** approved 2026-05-22. Phase A is the immediate writing-plans target;
 B + C remain as backlog entries to be planned later.
+
+## Version history
+
+This document is iterated as discrete versions under
+`docs/<topic>-design-v<N>.md`. "Current" = highest `-v<N>.md`. New
+iteration = `cp` to `-v<N+1>.md`, edit, prepend a row here, commit.
+Frozen versions are never edited after they ship.
+
+| Version | Date | Commit | Summary |
+|---|---|---|---|
+| v1 | 2026-05-22 | `d41add8` (drafted) → renamed in this commit | Initial brainstorm output: 3 phases (A essential, B discipline, C polish) with 10 improvement items, sequencing rationale, explicit non-goals, locked defaults (90s watchdog, SHA-pin strategy, CI block-merge). Phase A executed via [`phase-a-plan.md`](phase-a-plan.md). |
 
 **Goal.** Take zen-tei from "extracted files that work" to "thin deployment
 repo I can hand to a teammate, bump TEI in, and ignore for months at a time."
