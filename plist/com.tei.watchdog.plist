@@ -7,6 +7,9 @@
         <key>HOME</key><string>/Users/stu</string>
     </dict>
 
+    <key>KeepAlive</key>
+    <true/>
+
     <key>Label</key>
     <string>com.tei.watchdog</string>
 
@@ -17,9 +20,6 @@
 
     <key>RunAtLoad</key>
     <true/>
-
-    <key>StartInterval</key>
-    <integer>90</integer>
 
     <key>StandardOutPath</key>
     <string>/Users/stu/llm/logs/tei-watchdog.out.log</string>
