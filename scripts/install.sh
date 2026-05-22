@@ -63,17 +63,21 @@ fi
 
 echo
 echo "── 4/5 Install LaunchAgents ──"
-cp "$REPO_DIR/plist/com.tei.rerank.plist" "$HOME/Library/LaunchAgents/"
-cp "$REPO_DIR/plist/com.tei.embed.plist"  "$HOME/Library/LaunchAgents/"
-launchctl bootout "gui/$(id -u)/com.tei.rerank" 2>/dev/null || true
-launchctl bootout "gui/$(id -u)/com.tei.embed"  2>/dev/null || true
+cp "$REPO_DIR/plist/com.tei.rerank.plist"   "$HOME/Library/LaunchAgents/"
+cp "$REPO_DIR/plist/com.tei.embed.plist"    "$HOME/Library/LaunchAgents/"
+cp "$REPO_DIR/plist/com.tei.watchdog.plist" "$HOME/Library/LaunchAgents/"
+launchctl bootout "gui/$(id -u)/com.tei.rerank"   2>/dev/null || true
+launchctl bootout "gui/$(id -u)/com.tei.embed"    2>/dev/null || true
+launchctl bootout "gui/$(id -u)/com.tei.watchdog" 2>/dev/null || true
 launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/com.tei.rerank.plist"
 launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/com.tei.embed.plist"
+launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/com.tei.watchdog.plist"
 
 echo
 echo "── 5/5 Kickstart (macOS Tahoe wrinkle — bootstrap alone doesn't fire RunAtLoad) ──"
 launchctl kickstart "gui/$(id -u)/com.tei.rerank"
 launchctl kickstart "gui/$(id -u)/com.tei.embed"
+launchctl kickstart "gui/$(id -u)/com.tei.watchdog"
 
 echo
 echo "── Wait for both endpoints ──"
