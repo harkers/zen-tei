@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# scripts/uninstall.sh — stop + bootout both TEI LaunchAgents and remove the plists.
+# scripts/uninstall.sh — stop + bootout all three TEI LaunchAgents and remove the plists.
 #
 # Preserves the binary (`~/.cargo/bin/text-embeddings-router`), the source clone
 # (`~/llm/src/text-embeddings-inference/`), and the cached models. Re-run

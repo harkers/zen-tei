@@ -113,8 +113,8 @@ respawns the watchdog if it ever crashes.
 
 Tune the interval by editing the `INTERVAL=90` constant at the top of
 `scripts/watchdog.sh` (larger for less launchctl noise, smaller for
-faster recovery). `launchctl kickstart com.tei.watchdog` after the
-edit to pick up the new value.
+faster recovery). Then `launchctl kickstart "gui/$(id -u)/com.tei.watchdog"`
+to pick up the new value.
 
 ## Verify
 
@@ -144,15 +144,24 @@ curl -s -X POST http://127.0.0.1:4000/v1/embeddings \
 
 ## Upgrade
 
+Bumping TEI = bumping the pin in `VERSIONS`, then re-running install.
+The pin file is the contract; do NOT `git pull` the TEI source directly
+or you'll un-pin the binary silently. Full procedure in the
+[Pinned versions](#pinned-versions-versions) section above.
+
+Short form:
+
 ```bash
-cd ~/llm/src/text-embeddings-inference
-git pull
-cargo install --path router --features metal
-launchctl kickstart -k "gui/$(id -u)/com.tei.rerank"
-launchctl kickstart -k "gui/$(id -u)/com.tei.embed"
+$EDITOR VERSIONS                         # bump TEI_SOURCE_SHA + TEI_ROUTER_VERSION
+./scripts/install.sh                     # re-checks out the SHA, rebuilds, re-bootstraps
+./scripts/verify.sh                      # must pass 9/9
+$EDITOR VERSIONS                         # refresh LAST_SMOKE_DATE + LAST_SMOKE_RESULT
+git add VERSIONS && git commit -m "bump TEI to <sha>"
 ```
 
-Symlink at `~/llm/bin/text-embeddings-router` auto-resolves to the new build.
+The symlink at `~/llm/bin/text-embeddings-router` auto-resolves to the
+new build; the LaunchAgents pick it up on the next `launchctl kickstart`
+that install.sh runs at the end.
 
 ## Wired into
 
@@ -176,16 +185,23 @@ for the canonical statement of these conventions.
 
 ```
 zen-tei/
-├── README.md            # human-facing intro
-├── CLAUDE.md            # this file — operator context for Claude Code
+├── README.md             # human-facing intro
+├── CLAUDE.md             # this file — operator context for Claude Code
+├── VERSIONS              # pinned TEI SHA + Rust toolchain + model revisions
+├── rust-toolchain.toml   # cargo honors this automatically
 ├── plist/
 │   ├── com.tei.rerank.plist
-│   └── com.tei.embed.plist
+│   ├── com.tei.embed.plist
+│   └── com.tei.watchdog.plist
 ├── scripts/
-│   ├── install.sh       # rustup + cargo + model pull + plist install + bootstrap + kickstart
-│   ├── verify.sh        # smoke both endpoints + tailnet reach
-│   └── uninstall.sh     # bootout + remove plists (binary + models stay)
+│   ├── install.sh        # cargo + model pull + plist install + bootstrap + kickstart
+│   ├── verify.sh         # 9-check smoke (endpoints, dim, tailnet, LiteLLM hop)
+│   ├── uninstall.sh      # bootout + remove plists (binary + models stay)
+│   ├── lint.sh           # shellcheck scripts/*.sh + plutil plist/*.plist
+│   └── watchdog.sh       # long-lived loop; kickstart on dead /health
 └── docs/
-    ├── design.md        # the original design spec (2026-05-21)
-    └── plan.md          # the 14-task implementation plan that produced this
+    ├── design.md         # the original design spec (2026-05-21)
+    ├── plan.md           # the 14-task implementation plan that produced this
+    ├── backlog-design.md # Phase A/B/C improvements design (2026-05-22)
+    └── phase-a-plan.md   # Phase A executed plan (2026-05-22)
 ```
